@@ -1,0 +1,10 @@
+{
+  "name": "nsc-capstone-system",
+  "version": "0.1.0",
+  "private": true,
+  "description": "NSC Employee Records Management System (frontend-first scaffold)",
+  "main": "electron\\main.js",
+  "scripts": {
+    "start": "electron ."
+  }
+}
