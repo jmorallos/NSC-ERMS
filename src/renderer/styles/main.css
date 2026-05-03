@@ -1,6 +1,62 @@
+@import url('./sidebar.css');
+
 :root {
   color-scheme: light;
   font-family: Arial, Helvetica, sans-serif;
+
+
+  /* Text & Contrast */
+  --text-primary: #010101;     /* Deep Onyx */
+  --text-secondary: #4a5568;   /* Muted Slate for subtext */
+  --text-on-accent: #ffffff;   /* Essential for buttons */
+
+  /* Accents */
+  --accent: #00acea;           /* Sky Blue (Action) */
+  --accent-dark: #043c9b;      /* Deep Royal (Hover/Headers) */
+  --accent-soft: #e0f4ff;      /* Light tint for highlights */
+
+  /* Backgrounds & Surfaces */
+  --bg-below: #f0f4f8;         /* Very light grey-blue (Page background) */
+  --bg-surface: #ffffff;       /* Pure white (Cards/Main content) */
+  --bg-subtle: #dbeafe;        /* Soft blue (Sidebar/Secondary areas) */
+
+  /* Semantic Colors */
+  --status-error: #e53e3e;     /* For alerts */
+  --status-success: #38a169;   /* For confirmations */
+
+    --x-sm: 4px;
+    --sm: 8px;
+    --sm-md: 12px;
+    --md: 16px;
+    --md-lg: 24px;
+    --lg: 32px;
+    --xl: 64px;
+    --xxl: 128px;
+
+    /* === TYPOGRAPHY SCALE === */
+    --font-size-xs: 12px;
+    --font-size-sm: 14px;
+    --font-size-base: 16px;
+    --font-size-md: 18px;
+    --font-size-lg: 20px;
+    --font-size-xl: 24px;
+    --font-size-2xl: 32px;
+
+    /* === LINE HEIGHTS === */
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+
+    /* === BORDER RADIUS === */
+    --rd-round: 50%;
+    --rd-sm: 4px;
+    --rd-md: 8px;
+    --rd-lg: 12px;
+
+    /* === TRANSITIONS === */
+    --transition-fast: 0.15s ease-out;
+    --transition-base: 0.3s ease-out;
+    --transition-slow: 0.5s ease-out;
 }
 
 * {
@@ -9,8 +65,8 @@
 
 body {
   margin: 0;
-  background: #f6f8fb;
-  color: #1f2937;
+  background: var(--bg-below);
+  color: var(--text-primary);
 }
 
 .app-shell {
@@ -19,43 +75,6 @@ body {
   min-height: 100vh;
 }
 
-.sidebar {
-  padding: 24px 16px;
-  background: #0f172a;
-  color: #fff;
-}
-
-.sidebar h1 {
-  margin-top: 0;
-  font-size: 1.1rem;
-}
-
-.sidebar nav {
-  display: grid;
-  gap: 8px;
-}
-
-.sidebar button {
-  border: 0;
-  border-radius: 8px;
-  padding: 10px 12px;
-  text-align: left;
-  cursor: pointer;
-}
-
 .content {
-  padding: 24px;
-}
-
-header h2 {
-  margin: 0 0 8px;
-}
-
-#view-root {
-  margin-top: 16px;
-  min-height: 300px;
-  border: 1px dashed #94a3b8;
-  border-radius: 10px;
-  padding: 16px;
-  background: #ffffff;
+  padding: var(--md-lg);
 }
