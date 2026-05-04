@@ -6,5 +6,8 @@
   "main": "electron\\main.js",
   "scripts": {
     "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^41.5.0"
   }
 }

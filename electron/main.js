@@ -3,6 +3,12 @@ const path = require("path");
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      color: '#043c9b',
+      symbolColor: '#74b1be',
+      height: 30
+    },
     width: 1200,
     height: 800,
     minWidth: 1024,

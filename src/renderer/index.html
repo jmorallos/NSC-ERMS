@@ -9,46 +9,32 @@
 </head>
 
 <body>
-  <div class="app-shell">
-    <aside class="sidebar">
-      <h1>NSC-ERMS</h1>
-      <nav>
-        <button type="button">Employees</button>
-        <button type="button">Departments</button>
-        <button type="button">Documents</button>
-        <button type="button">Search</button>
-        <button type="button">Print</button>
-      </nav>
-    </aside>
-    <main id="view-root" class="content">
-      <h1>Hello</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>
-              Employee ID
-            </th>
-            <th>
-              FIRST NAME
-            </th>
-            <th>
-              LAST NAME
-            </th>
-            <th>
-              EMAIL
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>230380</td>
-            <td>JOEVER</td>
-            <td>MORALLOS</td>
-          </tr>
-        </tbody>
-      </table>
-    </main>
-  </div>
+  <div id="titlebar" class="titlebar"></div>
+  <aside id="sidebar">
+    <div class="brand">
+      <h1>NSC</h1>
+      <p>Employee Records Management</p>
+    </div>
+    <nav>
+      <a class="active" onclick="navigate('dashboard',this)">
+        Dashboard
+      </a>
+      <a onclick="navigate('employees',this)">
+        Employees
+      </a>
+      <a onclick="navigate('departments',this)">
+        Departments
+      </a>
+      <a onclick="navigate('export',this)">
+        Export
+      </a>
+    </nav>
+    <div class="sidebar-footer">College HR System v1.0</div>
+  </aside>
+
+  <main>
+
+  </main>
   <script src="./scripts/app.js"></script>
 </body>
 
