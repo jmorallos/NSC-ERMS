@@ -32,6 +32,8 @@
     --lg: 32px;
     --xl: 64px;
     --xxl: 128px;
+    --full-w: 100%;
+    --full-h: 100vh;
 
     /* === TYPOGRAPHY SCALE === */
     --font-size-xs: 12px;
@@ -69,4 +71,10 @@ body {
   background: var(--bg-below);
   color: var(--text-primary);
   font-size: var(--font-size-base);
+}
+
+.titlebar {
+  width: 100%;
+  height: var(--lg);
+  background-color: var(--accent-dark);
 }
