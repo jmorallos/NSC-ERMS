@@ -77,4 +77,5 @@ body {
 
 .content {
   padding: var(--md-lg);
+  color: var(--text-primary);
 }
