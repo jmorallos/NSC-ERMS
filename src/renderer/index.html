@@ -10,31 +10,37 @@
 
 <body>
   <div id="titlebar" class="titlebar"></div>
-  <aside id="sidebar">
-    <div class="brand">
-      <h1>NSC</h1>
-      <p>Employee Records Management</p>
-    </div>
-    <nav>
-      <a class="active" onclick="navigate('dashboard',this)">
-        Dashboard
-      </a>
-      <a onclick="navigate('employees',this)">
-        Employees
-      </a>
-      <a onclick="navigate('departments',this)">
-        Departments
-      </a>
-      <a onclick="navigate('export',this)">
-        Export
-      </a>
-    </nav>
-    <div class="sidebar-footer">College HR System v1.0</div>
-  </aside>
+  <div class="grid-container">
+    <aside id="sidebar">
+      <div id="brand" class="brand">
+        <div id="logo">
+          <img src="assets/NSC-logo.jpg" />
+        </div>
+        <h1>NSC</h1>
+        <p>Employee Records Management</p>
+      </div>
+      <nav>
+        <a class="active" onclick="navigate('employees',this)">
+          Employees
+        </a>
+        <a onclick="navigate('departments',this)">
+          Departments
+        </a>
+        <a onclick="navigate('export',this)">
+          Backup & Restore
+        </a>
+        <a onclick="navigate('export',this)">
+          Export Data
+        </a>
+      </nav>
+      <div class="sidebar-footer">College HR System v1.0</div>
+    </aside>
 
-  <main>
+    <main>
 
-  </main>
+    </main>
+  </div>
+
   <script src="./scripts/app.js"></script>
 </body>
 
