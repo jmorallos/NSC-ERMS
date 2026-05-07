@@ -6,7 +6,6 @@
     <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
     <circle cx="9" cy="7" r="4" />
   </symbol>
-
   <symbol viewBox="0 0 24 24" fill="none"
     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
     id="icon-building">
@@ -22,7 +21,6 @@
     <path d="M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" />
     <rect x="4" y="2" width="16" height="20" rx="2" />
   </symbol>
-
   <symbol viewBox="0 0 24 24" fill="none"
     stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
     id="icon-backup">
@@ -33,7 +31,6 @@
     <path d="M12 12v4h4" />
     <path d="M13 20a5 5 0 0 0 9-3 4.5 4.5 0 0 0-4.5-4.5c-1.33 0-2.54.54-3.41 1.41L12 16" />
   </symbol>
-
   <svg viewBox="0 0 24 24" fill="none"
     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
     id="icon-export">
@@ -43,7 +40,6 @@
     <path d="M12 12v6" />
     <path d="m15 15-3-3-3 3" />
   </svg>
-
   <symbol viewBox="0 0 24 24" fill="none"
     stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
     id="icon-settings">
@@ -51,4 +47,10 @@
       d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" />
     <circle cx="12" cy="12" r="3" />
   </symbol>
+  <symbol viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="icon-plus">
+    <path d="M5 12h14"/>
+    <path d="M12 5v14"/>
+  </symbol>
+
+
 </svg>
