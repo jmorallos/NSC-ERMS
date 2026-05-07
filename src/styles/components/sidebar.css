@@ -40,7 +40,6 @@
   translate: -0.4px 0.9px;
 }
 
-
 #sidebar nav {
   display: flex;
   flex-direction: column;
@@ -59,12 +58,13 @@
   cursor: pointer;
   text-decoration: none;
   margin-bottom: 2px;
-  transition: background .15s, color .15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 
-
 #sidebar nav a:hover {
-  background: rgba(0, 172, 234, .1);
+  background: rgba(0, 172, 234, 0.1);
   color: var(--accent-dark);
 }
 

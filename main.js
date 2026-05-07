@@ -3,11 +3,11 @@ const path = require("path");
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
-    titleBarStyle: 'hidden',
+    titleBarStyle: "hidden",
     titleBarOverlay: {
-      color: '#043c9b',
-      symbolColor: '#fff',
-      height: 32
+      color: "#043c9b",
+      symbolColor: "#fff",
+      height: 32,
     },
     width: 1200,
     height: 800,
@@ -16,8 +16,8 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
-      nodeIntegration: false
-    }
+      nodeIntegration: false,
+    },
   });
 
   mainWindow.loadFile(path.join(__dirname, ".", "src", "index.html"));

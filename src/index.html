@@ -1,74 +1,72 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NSC-ERMS</title>
+    <link rel="stylesheet" href="./styles/main.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NSC-ERMS</title>
-  <link rel="stylesheet" href="./styles/main.css" />
-</head>
-
-<body>
-  <div id="titlebar" class="titlebar"></div>
-  <div class="grid-container">
-    <aside id="sidebar">
-      <div id="brand" class="brand">
-        <div id="logo">
-          <img src="assets/NSC-logo.jpg" />
+  <body>
+    <div id="titlebar" class="titlebar"></div>
+    <div class="grid-container">
+      <aside id="sidebar">
+        <div id="brand" class="brand">
+          <div id="logo">
+            <img src="assets/NSC-logo.jpg" />
+          </div>
+          <h1>NSC</h1>
+          <p>Employee Records Management</p>
         </div>
-        <h1>NSC</h1>
-        <p>Employee Records Management</p>
-      </div>
-      <nav>
-        <a class="active" onclick="navigate('employees',this)">
-          <svg class="my-icon">
-            <use href="./assets/icons/icons.svg#icon-users"></use>
-          </svg>
-          Employees
-        </a>
-        <a onclick="navigate('departments',this)">
-          <svg class="my-icon">
-            <use href="./assets/icons/icons.svg#icon-building"></use>
-          </svg>
-          Departments
-        </a>
-        <a onclick="navigate('export',this)">
-          <svg class="my-icon">
-            <use href="./assets/icons/icons.svg#icon-backup"></use>
-          </svg>
-          Backup & Restore
-        </a>
-        <a onclick="navigate('export',this)">
-          <svg>
-            <use href="./assets/icons/icons.svg#icon-export"></use>
-          </svg>
-          Export Data
-        </a>
-        <a onclick="navigate('export',this)">
-          <svg>
-            <use href="./assets/icons/icons.svg#icon-settings"></use>
-          </svg>
-          Settings
-        </a>
-      </nav>
-      <div class="sidebar-footer">College HR System v1.0</div>
-    </aside>
+        <nav>
+          <a class="active" onclick="navigate('employees', this)">
+            <svg class="my-icon">
+              <use href="./assets/icons/icons.svg#icon-users"></use>
+            </svg>
+            Employees
+          </a>
+          <a onclick="navigate('departments', this)">
+            <svg class="my-icon">
+              <use href="./assets/icons/icons.svg#icon-building"></use>
+            </svg>
+            Departments
+          </a>
+          <a onclick="navigate('export', this)">
+            <svg class="my-icon">
+              <use href="./assets/icons/icons.svg#icon-backup"></use>
+            </svg>
+            Backup & Restore
+          </a>
+          <a onclick="navigate('export', this)">
+            <svg>
+              <use href="./assets/icons/icons.svg#icon-export"></use>
+            </svg>
+            Export Data
+          </a>
+          <a onclick="navigate('export', this)">
+            <svg>
+              <use href="./assets/icons/icons.svg#icon-settings"></use>
+            </svg>
+            Settings
+          </a>
+        </nav>
+        <div class="sidebar-footer">College HR System v1.0</div>
+      </aside>
 
-    <main>
-      <header>
-        <div class="page-title-wrapper"></div>
-        <div class="search-wrapper"></div>
-      </header>
-      <div class="table-container">
-        <table>
-          <thead></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </main>
-  </div>
+      <main>
+        <header>
+          <div class="page-title-wrapper"></div>
+          <div class="search-wrapper"></div>
+        </header>
+        <div class="table-container">
+          <table>
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </main>
+    </div>
 
-  <script src="./scripts/app.js"></script>
-</body>
-
+    <script src="./scripts/app.js"></script>
+  </body>
 </html>

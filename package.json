@@ -8,6 +8,7 @@
     "start": "electron ."
   },
   "devDependencies": {
-    "electron": "^41.5.0"
+    "electron": "^41.5.0",
+    "prettier": "3.8.3"
   }
 }
