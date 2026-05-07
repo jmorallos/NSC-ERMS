@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-  <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+  <symbol id="icon-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
     stroke-linecap="round" stroke-linejoin="round">
     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
     <path d="M16 3.128a4 4 0 0 1 0 7.744" />
@@ -8,7 +8,7 @@
   </symbol>
 
   <symbol viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
     id="icon-building">
     <path d="M12 10h.01" />
     <path d="M12 14h.01" />
@@ -26,7 +26,7 @@
   <symbol viewBox="0 0 24 24" fill="none"
     stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
     id="icon-backup">
-    <ellipse cx="12" cy="5" rx="9" ry="3" />
+    <ellipse cx="12" cy="5" rx="9" ry="2" />
     <path d="M3 12a9 3 0 0 0 5 2.69" />
     <path d="M21 9.3V5" />
     <path d="M3 5v14a9 3 0 0 0 6.47 2.88" />
@@ -35,7 +35,7 @@
   </symbol>
 
   <svg viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
     id="icon-export">
     <path
       d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
