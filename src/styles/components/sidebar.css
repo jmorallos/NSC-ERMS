@@ -26,7 +26,7 @@
   padding-top: var(--sm);
 }
 
-#logo {
+#sidebar #logo {
   width: var(--xl);
   height: var(--xl);
   border-radius: var(--rd-round);
@@ -35,7 +35,7 @@
   margin-right: 10px;
 }
 
-#logo img {
+#sidebar #logo img {
   width: var(--full-w);
   translate: -0.4px 0.9px;
 }
