@@ -59,6 +59,39 @@ body {
   border-right: 1px solid var(--border);
 }
 
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-left: 10px;
+}
+
+.logo-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--accent-soft);
+  border: 2px solid var(--accent);
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-title {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+.logo-subtitle {
+  font-size: 0.8em;
+  color: var(--text-secondary);
+}
+
 .sidebar-nav {
   list-style: none;
   padding: 0;
