@@ -2,11 +2,13 @@ import { renderSidebar } from './ui/sidebar.js';
 import { renderMainContent, updateMainContent } from './ui/mainContent.js';
 
 const viewCreators = {
-  employees: () => import('./views/employees.js').then(module => module.createEmployeesView()),
-  employeeDetail: (employeeId) => import('./views/employeeDetail.js').then(module => module.createEmployeeDetailView(employeeId)),
-  // documents: () => import('./views/documents.js').then(module => module.createDocumentsView()),
-  // settings: () => import('./views/settings.js').then(module => module.createSettingsView()),
+  employees: () => import('./views/employees.js').then(module => module.create()),
+  employeeDetail: (employeeId) => import('./views/employeeDetail.js').then(module => module.create(employeeId)),
+  // documents: () => import('./views/documents.js').then(module => module.create()),
+  // settings: () => import('./views/settings.js').then(module => module.create()),
 };
+
+let currentView = null; // To keep track of the current view's cleanup function
 
 document.addEventListener('DOMContentLoaded', () => {
   renderSidebar();
@@ -38,10 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function loadView(viewName, param) {
+  // Clean up the old view first
+  if (currentView && currentView.destroy) {
+    currentView.destroy();
+  }
+
   if (viewCreators[viewName]) {
     try {
-      const viewElement = await viewCreators[viewName](param);
-      updateMainContent(viewElement);
+      const view = await viewCreators[viewName](param);
+      currentView = view; // Store the new view
+      updateMainContent(view.element);
     } catch (error) {
       console.error(`Error loading view: ${viewName}`, error);
       const errorElement = document.createElement('div');
@@ -56,5 +64,6 @@ async function loadView(viewName, param) {
     heading.textContent = `${viewName} view not implemented`;
     viewElement.appendChild(heading);
     updateMainContent(viewElement);
+    currentView = { element: viewElement, destroy: () => { } };
   }
 }

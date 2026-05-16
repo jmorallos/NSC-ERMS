@@ -1,4 +1,4 @@
-import { findEmployeeById } from '../../data/employees.js';
+import { findEmployeeById } from '../utils/employee.js';
 import { createTable } from '../components/Table.js';
 
 const documentColumns = [
@@ -19,7 +19,7 @@ const documentColumns = [
   },
 ];
 
-function createEmployeeDetailView(employeeId) {
+function create(employeeId) {
   const view = document.createElement('div');
   view.className = 'employee-detail-view';
 
@@ -27,7 +27,7 @@ function createEmployeeDetailView(employeeId) {
 
   if (!employee) {
     view.innerHTML = '<h2>Employee not found</h2>';
-    return view;
+    return { element: view, destroy: () => { } };
   }
 
   // Header with back button and employee name
@@ -46,9 +46,6 @@ function createEmployeeDetailView(employeeId) {
   header.appendChild(heading);
   view.appendChild(header);
 
-  // Employee Info Section (can be expanded)
-  // ...
-
   // Documents Section
   const documentsHeading = document.createElement('h3');
   documentsHeading.textContent = 'Documents';
@@ -63,7 +60,10 @@ function createEmployeeDetailView(employeeId) {
     view.appendChild(noDocuments);
   }
 
-  return view;
+  return {
+    element: view,
+    destroy: () => { }
+  };
 }
 
-export { createEmployeeDetailView };
+export { create };
