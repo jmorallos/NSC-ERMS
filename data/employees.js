@@ -23,8 +23,4 @@ const employeesData = [
   },
 ];
 
-function findEmployeeById(empId) {
-  return employeesData.find(emp => emp.empId === empId);
-}
-
-export { employeesData, findEmployeeById };
+export { employeesData };

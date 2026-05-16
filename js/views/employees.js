@@ -3,7 +3,6 @@ import { createBadge } from '../components/Badge.js';
 import { createProfileCell } from '../components/ProfileCell.js';
 import { employeesData } from '../../data/employees.js';
 
-
 const columns = [
   { key: 'listno', label: 'List No.' },
   { key: 'empId', label: 'Emp ID' },
@@ -20,7 +19,7 @@ const columns = [
   },
 ];
 
-function createEmployeesView() {
+function create() {
   const view = document.createElement('div');
 
   const heading = document.createElement('h2');
@@ -30,7 +29,10 @@ function createEmployeesView() {
   const table = createTable(columns, employeesData);
   view.appendChild(table);
 
-  return view;
+  return {
+    element: view,
+    destroy: () => { }
+  };
 }
 
-export { createEmployeesView };
+export { create };
