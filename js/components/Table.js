@@ -16,6 +16,10 @@ function createTable(columns, data) {
   // Create table body
   data.forEach(item => {
     const row = document.createElement('tr');
+    if (item.empId) { // Add data-id for employee rows
+      row.dataset.id = item.empId;
+      row.classList.add('clickable-row');
+    }
     columns.forEach(col => {
       const cell = col.render ? col.render(item) : createDefaultCell(item[col.key]);
       row.appendChild(cell);
