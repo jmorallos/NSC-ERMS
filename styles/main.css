@@ -164,6 +164,9 @@ th {
   height: 40px;
   border-radius: 50%;
   margin-right: 15px;
+  background-color: var(--bg-subtle);
+  color: var(--text-secondary);
+  flex-shrink: 0;
 }
 
 .employee-name {
@@ -237,4 +240,13 @@ th {
   text-align: center;
   padding: 50px;
   color: var(--text-secondary);
+}
+
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clickable-row:hover {
+  background-color: var(--bg-subtle);
 }
