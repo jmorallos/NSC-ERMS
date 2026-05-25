@@ -44,6 +44,7 @@ export function createEmployeesTable({ onSelect } = {}) {
 function createEmployeeRow(employee, index, onSelect) {
     const row = document.createElement("tr");
     row.className = "employee-row";
+    row.tabIndex = 0;
 
     const indexCell = document.createElement("td");
     indexCell.textContent = index.toString();
@@ -101,11 +102,19 @@ function createEmployeeRow(employee, index, onSelect) {
             onSelect(employee, nameButton);
         });
 
-        row.addEventListener("click", (event) => {
+        const activateRow = (event) => {
             if (event.target.closest("button")) {
                 return;
             }
             onSelect(employee, nameButton);
+        };
+
+        row.addEventListener("click", activateRow);
+        row.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                onSelect(employee, nameButton);
+            }
         });
     }
 

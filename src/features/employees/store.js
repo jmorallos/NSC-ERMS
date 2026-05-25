@@ -1,3 +1,17 @@
+import { EMPLOYEES } from "../../data/employees.js";
+import { loadEmployees, saveEmployees } from "./persistence.js";
+import { formatEmployeeDate, generateEmployeeId } from "./utils.js";
+
+let sharedStore = null;
+
+export function getEmployeesStore() {
+    if (!sharedStore) {
+        const seed = loadEmployees(EMPLOYEES);
+        sharedStore = createEmployeesStore(seed);
+    }
+    return sharedStore;
+}
+
 export function createEmployeesStore(initialEmployees = []) {
     let state = {
         employees: initialEmployees.map(cloneEmployee),
@@ -35,7 +49,7 @@ export function createEmployeesStore(initialEmployees = []) {
                 if (employee.id !== id) {
                     return employee;
                 }
-                updated = { ...employee, ...updates };
+                updated = cloneEmployee({ ...employee, ...updates, updated: formatEmployeeDate() });
                 return updated;
             })
         };
@@ -69,6 +83,28 @@ export function createEmployeesStore(initialEmployees = []) {
         return cloneEmployee(nextEmployee);
     };
 
+    const createEmployee = (values = {}) => {
+        const employee = {
+            id: generateEmployeeId(state.employees),
+            name: values.name,
+            role: values.role,
+            department: values.department,
+            status: values.status || "Active",
+            updated: formatEmployeeDate(),
+            email: values.email,
+            phone: values.phone || "",
+            since: new Date().toISOString().slice(0, 10),
+            address: "",
+            employmentType: "Full-time",
+            supervisor: "",
+            fileStatus: "Incomplete",
+            fileCount: 0,
+            fileNotes: "New record — add documents when available.",
+            documents: []
+        };
+        return addEmployee(employee);
+    };
+
     const getEmployeeById = (id) => {
         const employee = state.employees.find((item) => item.id === id);
         return employee ? cloneEmployee(employee) : null;
@@ -80,6 +116,7 @@ export function createEmployeesStore(initialEmployees = []) {
     };
 
     const notify = () => {
+        saveEmployees(state.employees);
         const snapshot = getSnapshot();
         listeners.forEach((listener) => listener(snapshot));
     };
@@ -90,6 +127,7 @@ export function createEmployeesStore(initialEmployees = []) {
         updateEmployee,
         deleteEmployee,
         addEmployee,
+        createEmployee,
         getEmployeeById,
         subscribe
     };
@@ -113,5 +151,8 @@ function getFilteredEmployees(state) {
 }
 
 function cloneEmployee(employee) {
-    return { ...employee };
+    return {
+        ...employee,
+        documents: [...(employee.documents || [])]
+    };
 }

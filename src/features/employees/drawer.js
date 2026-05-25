@@ -1,4 +1,4 @@
-import { STATUS_CLASS } from "./constants.js";
+import { FILE_STATUS_CLASS, STATUS_CLASS } from "./constants.js";
 import { getInitials } from "./utils.js";
 
 export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
@@ -76,7 +76,7 @@ export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
 
     editButton.addEventListener("click", () => {
         if (activeEmployee && onEdit) {
-            onEdit(activeEmployee);
+            onEdit(activeEmployee, editButton);
         }
     });
 
@@ -157,10 +157,13 @@ export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
     fileSection.className = "employee-section";
     fileSection.hidden = true;
 
+    const fileSummary = document.createElement("div");
+    fileSummary.className = "employee-file-summary";
+
     const fileItems = document.createElement("div");
     fileItems.className = "employee-file-list";
 
-    fileSection.append(fileItems);
+    fileSection.append(fileSummary, fileItems);
 
     const setActiveTab = (tabButton, section) => {
         [personalTab, employmentTab, fileTab].forEach((button) => {
@@ -200,7 +203,9 @@ export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
         employmentFields.type.textContent = employee.employmentType || "-";
         employmentFields.hired.textContent = employee.since || "-";
         employmentFields.supervisor.textContent = employee.supervisor || "-";
+        renderFileSummary(fileSummary, employee);
         renderDocuments(fileItems, employee.documents || []);
+        panel.setAttribute("aria-label", `${employee.name} details`);
 
         setActiveTab(personalTab, personalSection);
 
@@ -219,6 +224,7 @@ export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
         }
         lastFocusedElement = null;
         activeEmployee = null;
+        panel.setAttribute("aria-label", "Employee details");
     };
 
     overlay.addEventListener("click", close);
@@ -235,6 +241,24 @@ export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
     });
 
     return { root, open, close };
+}
+
+function renderFileSummary(container, employee) {
+    container.replaceChildren();
+
+    const status = document.createElement("span");
+    status.className = `status-badge ${FILE_STATUS_CLASS[employee.fileStatus] || "status-default"}`;
+    status.textContent = employee.fileStatus || "Unknown";
+
+    const meta = document.createElement("p");
+    meta.className = "employee-file-summary-meta";
+    meta.textContent = `${employee.fileCount ?? 0} file(s) on record`;
+
+    const notes = document.createElement("p");
+    notes.className = "employee-file-summary-notes";
+    notes.textContent = employee.fileNotes || "No notes.";
+
+    container.append(status, meta, notes);
 }
 
 function renderDocuments(container, documents = []) {

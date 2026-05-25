@@ -44,5 +44,11 @@ export function createShell({ sidebar }) {
     main.append(topbar, content);
     root.append(sidebar, main);
 
-    return { root, contentEl: content, titleEl: heading };
+    return {
+        root,
+        contentEl: content,
+        titleEl: heading,
+        addRecordBtn: primary,
+        quickExportBtn: secondary
+    };
 }

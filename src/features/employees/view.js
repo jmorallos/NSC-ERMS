@@ -1,24 +1,51 @@
-import { EMPLOYEES } from "../../data/employees.js";
+import { setAddEmployeeHandler } from "../../app/actions.js";
 import { createEmployeeDrawer } from "./drawer.js";
+import { createEmployeeFormModal } from "./formModal.js";
 import { createEmployeesTable } from "./table.js";
 import { createEmployeesToolbar } from "./toolbar.js";
-import { createEmployeesStore } from "./store.js";
+import { getEmployeesStore } from "./store.js";
 
 export function renderEmployeesView() {
     const section = document.createElement("section");
     section.className = "employees-view";
 
-    const store = createEmployeesStore(EMPLOYEES);
+    const store = getEmployeesStore();
     let drawer;
 
     const { employees } = store.getSnapshot();
     const {
         toolbar,
+        addButton,
         searchInput,
         departmentSelect,
         statusSelect,
         updateOptions
     } = createEmployeesToolbar(employees);
+
+    const formModal = createEmployeeFormModal({
+        onSubmit: ({ mode, employeeId, values }) => {
+            if (mode === "edit" && employeeId) {
+                const updated = store.updateEmployee(employeeId, values);
+                if (updated) {
+                    drawer.open(updated);
+                }
+                return;
+            }
+
+            const created = store.createEmployee(values);
+            if (created) {
+                drawer.open(created);
+            }
+        }
+    });
+
+    const openAddForm = (trigger) => {
+        formModal.open({ mode: "add", trigger });
+    };
+
+    const handleEdit = (employee, trigger) => {
+        formModal.open({ mode: "edit", employee, trigger });
+    };
 
     const { table, renderRows } = createEmployeesTable({
         onSelect: (employee, trigger) => {
@@ -37,33 +64,6 @@ export function renderEmployeesView() {
         });
     };
 
-    const handleEdit = (employee) => {
-        const name = window.prompt("Full name", employee.name);
-        if (name === null) {
-            return;
-        }
-
-        const email = window.prompt("Email", employee.email);
-        if (email === null) {
-            return;
-        }
-
-        const phone = window.prompt("Contact", employee.phone || "");
-        if (phone === null) {
-            return;
-        }
-
-        const updated = store.updateEmployee(employee.id, {
-            name: name.trim() || employee.name,
-            email: email.trim() || employee.email,
-            phone: phone.trim() || employee.phone
-        });
-
-        if (updated) {
-            drawer.open(updated);
-        }
-    };
-
     const handleDelete = (employee) => {
         const confirmed = window.confirm(`Delete ${employee.name}?`);
         if (!confirmed) {
@@ -77,9 +77,15 @@ export function renderEmployeesView() {
         drawer.close();
     };
 
-    drawer = createEmployeeDrawer({ onEdit: handleEdit, onDelete: handleDelete });
+    drawer = createEmployeeDrawer({
+        onEdit: (employee, trigger) => handleEdit(employee, trigger),
+        onDelete: handleDelete
+    });
 
-    section.append(toolbar, table, drawer.root);
+    section.append(toolbar, table, drawer.root, formModal.root);
+
+    addButton.addEventListener("click", () => openAddForm(addButton));
+    setAddEmployeeHandler(() => openAddForm(addButton));
 
     searchInput.addEventListener("input", syncFilters);
     departmentSelect.addEventListener("change", syncFilters);

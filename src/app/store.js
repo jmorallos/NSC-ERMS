@@ -15,17 +15,16 @@ export function createAppStore({ initialRoute = null, ui = {} } = {}) {
     });
 
     const setRoute = (route) => {
-        if (!route || route.key === state.route?.key) {
-            state = {
-                ...state,
-                route
-            };
-        } else {
-            state = {
-                ...state,
-                route
-            };
+        if (!route) {
+            return;
         }
+        if (route.key === state.route?.key) {
+            return;
+        }
+        state = {
+            ...state,
+            route
+        };
         notify();
     };
 

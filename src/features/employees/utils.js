@@ -61,3 +61,24 @@ export function getInitials(name = "") {
     const last = parts.length > 1 ? parts[parts.length - 1][0] : "";
     return `${first}${last}`.toUpperCase();
 }
+
+export function formatEmployeeDate(date = new Date()) {
+    return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+    });
+}
+
+export function generateEmployeeId(employees = []) {
+    const numbers = employees.map((employee) => {
+        const match = employee.id.match(/EMP-(\d+)/i);
+        return match ? Number.parseInt(match[1], 10) : 0;
+    });
+    const next = Math.max(0, ...numbers, 0) + 1;
+    return `EMP-${String(next).padStart(3, "0")}`;
+}
+
+export function isValidEmail(value = "") {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
