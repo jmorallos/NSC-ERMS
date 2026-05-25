@@ -2,6 +2,7 @@ import { NAV_LINKS } from "../shared/config/navlinks.js";
 import { renderSidebar } from "../shared/components/sidebar.js";
 import { createShell } from "./shell.js";
 import { resolveRoute } from "./routes.js";
+import { createAppStore } from "./store.js";
 
 const root = document.getElementById("root");
 
@@ -15,8 +16,16 @@ export function initApp() {
 
     root.replaceChildren(shell.root);
 
-    const render = () => {
-        const route = resolveRoute(window.location.hash);
+    if (!window.location.hash) {
+        window.location.hash = "#employees";
+    }
+
+    const store = createAppStore({
+        initialRoute: resolveRoute(window.location.hash)
+    });
+
+    const render = (snapshot) => {
+        const route = snapshot.route || resolveRoute(window.location.hash);
         const view = route.render();
 
         shell.titleEl.textContent = route.title;
@@ -24,13 +33,13 @@ export function initApp() {
         setActiveNav(sidebar, route.key);
     };
 
-    window.addEventListener("hashchange", render);
+    store.subscribe(render);
 
-    if (!window.location.hash) {
-        window.location.hash = "#employees";
-    }
+    window.addEventListener("hashchange", () => {
+        store.setRoute(resolveRoute(window.location.hash));
+    });
 
-    render();
+    render(store.getSnapshot());
 }
 
 function setActiveNav(sidebar, routeKey) {
