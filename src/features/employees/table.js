@@ -1,5 +1,5 @@
 import { STATUS_CLASS } from "./constants.js";
-import { getInitials } from "./utils.js";
+import { formatDisplayName, getInitialsFromEmployee } from "./utils.js";
 
 export function createEmployeesTable({ onSelect } = {}) {
     const table = document.createElement("table");
@@ -46,6 +46,8 @@ function createEmployeeRow(employee, index, onSelect) {
     row.className = "employee-row";
     row.tabIndex = 0;
 
+    const displayName = formatDisplayName(employee);
+
     const indexCell = document.createElement("td");
     indexCell.textContent = index.toString();
 
@@ -56,20 +58,20 @@ function createEmployeeRow(employee, index, onSelect) {
     const nameButton = document.createElement("button");
     nameButton.type = "button";
     nameButton.className = "employee-row-button";
-    nameButton.setAttribute("aria-label", `View ${employee.name} details`);
+    nameButton.setAttribute("aria-label", `View ${displayName} details`);
     const employeeWrap = document.createElement("div");
     employeeWrap.className = "employee-cell";
 
     const avatar = document.createElement("div");
     avatar.className = "employee-avatar";
-    avatar.textContent = getInitials(employee.name);
+    avatar.textContent = getInitialsFromEmployee(employee);
 
     const info = document.createElement("div");
     info.className = "employee-info";
 
     const name = document.createElement("p");
     name.className = "employee-name";
-    name.textContent = employee.name;
+    name.textContent = displayName;
 
     const email = document.createElement("p");
     email.className = "employee-email";
@@ -81,13 +83,13 @@ function createEmployeeRow(employee, index, onSelect) {
     nameCell.appendChild(nameButton);
 
     const contactCell = document.createElement("td");
-    contactCell.textContent = employee.phone || "-";
+    contactCell.textContent = employee.contact || "-";
 
     const roleCell = document.createElement("td");
-    roleCell.textContent = employee.role;
+    roleCell.textContent = employee.position;
 
     const departmentCell = document.createElement("td");
-    departmentCell.textContent = employee.department;
+    departmentCell.textContent = employee.dept;
 
     const statusCell = document.createElement("td");
     const status = document.createElement("span");

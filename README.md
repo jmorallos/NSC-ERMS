@@ -15,11 +15,19 @@ Then open the URL shown (for example `http://localhost:3000`).
 ## Features
 
 - **Employees** — search, filter, detail drawer, add/edit form, delete (persisted in `localStorage`)
-- **Documents, Quick Export, Backup and Restore, Settings** — placeholder screens
+- **Quick Export, Backup and Restore, Settings** — placeholder screens
+- Per-employee **201 File** (upload/remove document metadata) is in the employee drawer
 
-## Data
+## Data model (schema v2)
 
-Seed data lives in `src/data/employees.js`. Edits are saved to the browser under the key `nsc-erms-employees`. Clear site data or remove that key in DevTools to reset to the seed list.
+Each employee record uses:
+
+- `fname`, `lname`, `email`, `contact`, `address`
+- `position`, `dept`, `status`, `start_date`, `updated`
+- `picture` (optional base64 image)
+- `docs`: `[{ id, name, type, size, date, source }]`
+
+Seed data lives in `src/data/employees.js`. Edits persist in `localStorage` (`nsc-erms-employees`). Legacy records are migrated automatically on load. Clear site data in DevTools to reset to the seed list.
 
 ## Structure
 

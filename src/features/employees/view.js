@@ -4,6 +4,7 @@ import { createEmployeeFormModal } from "./formModal.js";
 import { createEmployeesTable } from "./table.js";
 import { createEmployeesToolbar } from "./toolbar.js";
 import { getEmployeesStore } from "./store.js";
+import { formatDisplayName } from "./utils.js";
 
 export function renderEmployeesView() {
     const section = document.createElement("section");
@@ -65,7 +66,7 @@ export function renderEmployeesView() {
     };
 
     const handleDelete = (employee) => {
-        const confirmed = window.confirm(`Delete ${employee.name}?`);
+        const confirmed = window.confirm(`Delete ${formatDisplayName(employee)}?`);
         if (!confirmed) {
             return;
         }
@@ -78,6 +79,7 @@ export function renderEmployeesView() {
     };
 
     drawer = createEmployeeDrawer({
+        store,
         onEdit: (employee, trigger) => handleEdit(employee, trigger),
         onDelete: handleDelete
     });
@@ -104,6 +106,8 @@ export function renderEmployeesView() {
                 status: normalized.status
             });
         }
+
+        drawer.refreshActiveEmployee?.();
     });
 
     renderRows(store.getSnapshot().filteredEmployees);

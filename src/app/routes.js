@@ -1,5 +1,4 @@
 import { renderEmployeesView } from "../features/employees/view.js";
-import { renderDocumentsView } from "../features/documents/view.js";
 import { renderQuickExportView } from "../features/quickExport/view.js";
 import { renderBackupRestoreView } from "../features/backupRestore/view.js";
 import { renderSettingsView } from "../features/settings/view.js";
@@ -8,10 +7,6 @@ const ROUTES = {
     employees: {
         title: "Employees",
         render: renderEmployeesView
-    },
-    documents: {
-        title: "Documents",
-        render: renderDocumentsView
     },
     "quick-export": {
         title: "Quick Export",

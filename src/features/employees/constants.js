@@ -7,8 +7,10 @@ export const STATUS_CLASS = {
     Inactive: "status-inactive"
 };
 
-export const FILE_STATUS_CLASS = {
-    Complete: "status-active",
-    Incomplete: "status-pending",
-    "In progress": "status-on-leave"
+export const DOC_TYPE_CLASS = {
+    pdf: "doc-type-pdf",
+    img: "doc-type-img",
+    doc: "doc-type-doc",
+    scan: "doc-type-scan",
+    other: "doc-type-other"
 };

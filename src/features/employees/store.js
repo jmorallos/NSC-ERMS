@@ -1,6 +1,12 @@
 import { EMPLOYEES } from "../../data/employees.js";
+import {
+    cloneEmployee,
+    getNextDocId,
+    getSearchHaystack,
+    normalizeEmployee
+} from "./model.js";
 import { loadEmployees, saveEmployees } from "./persistence.js";
-import { formatEmployeeDate, generateEmployeeId } from "./utils.js";
+import { formatEmployeeDate, formatFileSize, generateEmployeeId, getFileType, getToday } from "./utils.js";
 
 let sharedStore = null;
 
@@ -14,7 +20,7 @@ export function getEmployeesStore() {
 
 export function createEmployeesStore(initialEmployees = []) {
     let state = {
-        employees: initialEmployees.map(cloneEmployee),
+        employees: initialEmployees.map(normalizeEmployee),
         filters: {
             term: "",
             department: "",
@@ -49,7 +55,11 @@ export function createEmployeesStore(initialEmployees = []) {
                 if (employee.id !== id) {
                     return employee;
                 }
-                updated = cloneEmployee({ ...employee, ...updates, updated: formatEmployeeDate() });
+                updated = normalizeEmployee({
+                    ...employee,
+                    ...updates,
+                    updated: formatEmployeeDate()
+                });
                 return updated;
             })
         };
@@ -74,7 +84,7 @@ export function createEmployeesStore(initialEmployees = []) {
     };
 
     const addEmployee = (employee) => {
-        const nextEmployee = cloneEmployee(employee);
+        const nextEmployee = normalizeEmployee(employee);
         state = {
             ...state,
             employees: [...state.employees, nextEmployee]
@@ -86,23 +96,76 @@ export function createEmployeesStore(initialEmployees = []) {
     const createEmployee = (values = {}) => {
         const employee = {
             id: generateEmployeeId(state.employees),
-            name: values.name,
-            role: values.role,
-            department: values.department,
-            status: values.status || "Active",
-            updated: formatEmployeeDate(),
+            fname: values.fname,
+            lname: values.lname,
             email: values.email,
-            phone: values.phone || "",
-            since: new Date().toISOString().slice(0, 10),
-            address: "",
-            employmentType: "Full-time",
-            supervisor: "",
-            fileStatus: "Incomplete",
-            fileCount: 0,
-            fileNotes: "New record — add documents when available.",
-            documents: []
+            contact: values.contact || "",
+            address: values.address || "",
+            position: values.position,
+            dept: values.dept,
+            status: values.status || "Active",
+            start_date: values.start_date || getToday(),
+            updated: formatEmployeeDate(),
+            picture: values.picture ?? null,
+            docs: []
         };
         return addEmployee(employee);
+    };
+
+    const addDocument = (employeeId, file) => {
+        let added = null;
+        state = {
+            ...state,
+            employees: state.employees.map((employee) => {
+                if (employee.id !== employeeId) {
+                    return employee;
+                }
+                const doc = {
+                    id: getNextDocId(state.employees),
+                    name: file.name,
+                    type: getFileType(file.name),
+                    size: formatFileSize(file.size),
+                    date: getToday(),
+                    source: "upload"
+                };
+                added = doc;
+                return normalizeEmployee({
+                    ...employee,
+                    docs: [...employee.docs, doc],
+                    updated: formatEmployeeDate()
+                });
+            })
+        };
+        if (added) {
+            notify();
+        }
+        return added;
+    };
+
+    const deleteDocument = (employeeId, docId) => {
+        let removed = false;
+        state = {
+            ...state,
+            employees: state.employees.map((employee) => {
+                if (employee.id !== employeeId) {
+                    return employee;
+                }
+                const nextDocs = employee.docs.filter((doc) => doc.id !== docId);
+                if (nextDocs.length === employee.docs.length) {
+                    return employee;
+                }
+                removed = true;
+                return normalizeEmployee({
+                    ...employee,
+                    docs: nextDocs,
+                    updated: formatEmployeeDate()
+                });
+            })
+        };
+        if (removed) {
+            notify();
+        }
+        return removed;
     };
 
     const getEmployeeById = (id) => {
@@ -128,6 +191,8 @@ export function createEmployeesStore(initialEmployees = []) {
         deleteEmployee,
         addEmployee,
         createEmployee,
+        addDocument,
+        deleteDocument,
         getEmployeeById,
         subscribe
     };
@@ -140,19 +205,10 @@ function getFilteredEmployees(state) {
 
     return state.employees
         .filter((employee) => {
-            const matchesDepartment = department ? employee.department === department : true;
+            const matchesDepartment = department ? employee.dept === department : true;
             const matchesStatus = status ? employee.status === status : true;
-            const haystack = `${employee.name} ${employee.role} ${employee.id} ${employee.email} ${employee.phone || ""}`
-                .toLowerCase();
-            const matchesTerm = term ? haystack.includes(term) : true;
+            const matchesTerm = term ? getSearchHaystack(employee).includes(term) : true;
             return matchesDepartment && matchesStatus && matchesTerm;
         })
         .map(cloneEmployee);
-}
-
-function cloneEmployee(employee) {
-    return {
-        ...employee,
-        documents: [...(employee.documents || [])]
-    };
 }

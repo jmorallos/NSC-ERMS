@@ -6,12 +6,6 @@ export const NAV_LINKS = [
         icon: "./src/assets/icons.svg#icon-employees"
     },
     {
-        id: "documents",
-        label: "Documents",
-        href: "#documents",
-        icon: "./src/assets/icons.svg#icon-documents"
-    },
-    {
         id: "quick-export",
         label: "Quick Export",
         href: "#quick-export",

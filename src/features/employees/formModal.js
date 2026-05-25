@@ -1,4 +1,5 @@
 import { EMPLOYEE_STATUSES } from "./constants.js";
+import { getFullName } from "./model.js";
 import { isValidEmail } from "./utils.js";
 
 export function createEmployeeFormModal({ onSubmit } = {}) {
@@ -10,7 +11,7 @@ export function createEmployeeFormModal({ onSubmit } = {}) {
     overlay.className = "form-modal-overlay";
 
     const dialog = document.createElement("div");
-    dialog.className = "form-modal-panel";
+    dialog.className = "form-modal-panel form-modal-panel-wide";
     dialog.setAttribute("role", "dialog");
     dialog.setAttribute("aria-modal", "true");
     dialog.tabIndex = -1;
@@ -36,13 +37,39 @@ export function createEmployeeFormModal({ onSubmit } = {}) {
     form.setAttribute("aria-labelledby", "employee-form-title");
     form.noValidate = true;
 
+    const photoWrap = document.createElement("div");
+    photoWrap.className = "form-photo-wrap";
+
+    const photoPreview = document.createElement("div");
+    photoPreview.className = "form-photo-preview";
+    photoPreview.textContent = "?";
+
+    const photoLabel = document.createElement("label");
+    photoLabel.className = "form-photo-label";
+    photoLabel.textContent = "Upload photo";
+    photoLabel.setAttribute("for", "employee-photo-input");
+
+    const photoInput = document.createElement("input");
+    photoInput.type = "file";
+    photoInput.id = "employee-photo-input";
+    photoInput.accept = "image/*";
+    photoInput.hidden = true;
+
+    photoWrap.append(photoPreview, photoLabel, photoInput);
+    form.appendChild(photoWrap);
+
+    let tempPhoto = null;
+
     const fields = {
-        name: createField("Full name", "text", { required: true }),
+        fname: createField("First name", "text", { required: true }),
+        lname: createField("Last name", "text", { required: true }),
         email: createField("Email", "email", { required: true }),
-        phone: createField("Contact", "tel"),
-        role: createField("Position", "text", { required: true }),
-        department: createField("Department", "text", { required: true }),
-        status: createSelectField("Status", EMPLOYEE_STATUSES)
+        contact: createField("Contact", "tel"),
+        address: createField("Address", "textarea", { fullWidth: true }),
+        position: createField("Position", "text", { required: true }),
+        dept: createField("Department", "text", { required: true }),
+        status: createSelectField("Status", EMPLOYEE_STATUSES),
+        start_date: createField("Start date", "date")
     };
 
     Object.values(fields).forEach((field) => form.appendChild(field.group));
@@ -75,6 +102,41 @@ export function createEmployeeFormModal({ onSubmit } = {}) {
     let employeeId = null;
     let lastFocusedElement = null;
 
+    const resetPhotoPreview = (employee = null) => {
+        tempPhoto = employee?.picture ?? null;
+        photoPreview.replaceChildren();
+        photoPreview.className = "form-photo-preview";
+
+        if (tempPhoto) {
+            const img = document.createElement("img");
+            img.src = tempPhoto;
+            img.alt = getFullName(employee) || "Employee photo";
+            img.className = "form-photo-image";
+            photoPreview.appendChild(img);
+            return;
+        }
+
+        photoPreview.textContent = "?";
+    };
+
+    photoInput.addEventListener("change", () => {
+        const file = photoInput.files[0];
+        if (!file) {
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            tempPhoto = event.target.result;
+            photoPreview.replaceChildren();
+            const img = document.createElement("img");
+            img.src = tempPhoto;
+            img.alt = "Selected photo";
+            img.className = "form-photo-image";
+            photoPreview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    });
+
     const close = () => {
         root.classList.remove("is-open");
         root.setAttribute("aria-hidden", "true");
@@ -82,6 +144,8 @@ export function createEmployeeFormModal({ onSubmit } = {}) {
         error.hidden = true;
         error.textContent = "";
         form.reset();
+        photoInput.value = "";
+        tempPhoto = null;
         if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
             lastFocusedElement.focus();
         }
@@ -97,12 +161,18 @@ export function createEmployeeFormModal({ onSubmit } = {}) {
         title.textContent = mode === "edit" ? "Edit employee" : "Add employee";
         submitButton.textContent = mode === "edit" ? "Save changes" : "Add employee";
 
-        fields.name.input.value = employee?.name || "";
+        fields.fname.input.value = employee?.fname || "";
+        fields.lname.input.value = employee?.lname || "";
         fields.email.input.value = employee?.email || "";
-        fields.phone.input.value = employee?.phone || "";
-        fields.role.input.value = employee?.role || "";
-        fields.department.input.value = employee?.department || "";
+        fields.contact.input.value = employee?.contact || "";
+        fields.address.input.value = employee?.address || "";
+        fields.position.input.value = employee?.position || "";
+        fields.dept.input.value = employee?.dept || "";
         fields.status.select.value = employee?.status || EMPLOYEE_STATUSES[0];
+        fields.start_date.input.value = employee?.start_date || "";
+
+        resetPhotoPreview(employee);
+        photoInput.value = "";
 
         error.hidden = true;
         error.textContent = "";
@@ -110,7 +180,7 @@ export function createEmployeeFormModal({ onSubmit } = {}) {
         root.classList.add("is-open");
         root.setAttribute("aria-hidden", "false");
         document.body.style.overflow = "hidden";
-        fields.name.input.focus();
+        fields.fname.input.focus();
     };
 
     const handleSubmit = (event) => {
@@ -119,16 +189,20 @@ export function createEmployeeFormModal({ onSubmit } = {}) {
         error.textContent = "";
 
         const values = {
-            name: fields.name.input.value.trim(),
+            fname: fields.fname.input.value.trim(),
+            lname: fields.lname.input.value.trim(),
             email: fields.email.input.value.trim(),
-            phone: fields.phone.input.value.trim(),
-            role: fields.role.input.value.trim(),
-            department: fields.department.input.value.trim(),
-            status: fields.status.select.value
+            contact: fields.contact.input.value.trim(),
+            address: fields.address.input.value.trim(),
+            position: fields.position.input.value.trim(),
+            dept: fields.dept.input.value.trim(),
+            status: fields.status.select.value,
+            start_date: fields.start_date.input.value,
+            picture: tempPhoto
         };
 
-        if (!values.name || !values.role || !values.department) {
-            error.textContent = "Name, position, and department are required.";
+        if (!values.fname || !values.lname || !values.position || !values.dept) {
+            error.textContent = "First name, last name, position, and department are required.";
             error.hidden = false;
             return;
         }
@@ -160,17 +234,23 @@ export function createEmployeeFormModal({ onSubmit } = {}) {
     return { root, open, close };
 }
 
-function createField(label, type, { required = false } = {}) {
+function createField(label, type, { required = false, fullWidth = false } = {}) {
     const group = document.createElement("label");
-    group.className = "form-field";
+    group.className = fullWidth ? "form-field full-width" : "form-field";
 
     const name = document.createElement("span");
     name.className = "form-field-label";
     name.textContent = label;
 
-    const input = document.createElement("input");
+    const input =
+        type === "textarea"
+            ? document.createElement("textarea")
+            : document.createElement("input");
+
     input.className = "input";
-    input.type = type;
+    if (type !== "textarea") {
+        input.type = type;
+    }
     if (required) {
         input.required = true;
     }

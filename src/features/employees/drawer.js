@@ -1,7 +1,12 @@
-import { FILE_STATUS_CLASS, STATUS_CLASS } from "./constants.js";
-import { getInitials } from "./utils.js";
+import { DOC_TYPE_CLASS, STATUS_CLASS } from "./constants.js";
+import { getFullName } from "./model.js";
+import {
+    formatDisplayName,
+    getInitialsFromEmployee,
+    getYearsOfService
+} from "./utils.js";
 
-export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
+export function createEmployeeDrawer({ store, onEdit, onDelete } = {}) {
     const root = document.createElement("div");
     root.className = "employee-drawer";
     root.setAttribute("aria-hidden", "true");
@@ -26,7 +31,6 @@ export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
 
     const avatar = document.createElement("div");
     avatar.className = "employee-hero-avatar";
-    avatar.textContent = "";
 
     const heroInfo = document.createElement("div");
     heroInfo.className = "employee-hero-info";
@@ -57,7 +61,7 @@ export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
     closeButton.type = "button";
     closeButton.className = "employee-close";
     closeButton.setAttribute("aria-label", "Close");
-    closeButton.textContent = "x";
+    closeButton.textContent = "Close";
 
     heroTop.append(avatar, heroInfo, closeButton);
 
@@ -108,7 +112,7 @@ export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
     const fileTab = document.createElement("button");
     fileTab.type = "button";
     fileTab.className = "employee-tab";
-    fileTab.textContent = "Documents";
+    fileTab.textContent = "201 File";
 
     tabs.append(personalTab, employmentTab, fileTab);
 
@@ -125,7 +129,7 @@ export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
     const personalFields = {
         name: createInfoRow(personalList, "Full Name"),
         email: createInfoRow(personalList, "Email"),
-        phone: createInfoRow(personalList, "Contact"),
+        contact: createInfoRow(personalList, "Contact"),
         address: createInfoRow(personalList, "Address")
     };
 
@@ -146,9 +150,8 @@ export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
         position: createInfoRow(employmentList, "Position"),
         department: createInfoRow(employmentList, "Department"),
         status: createInfoRow(employmentList, "Status"),
-        type: createInfoRow(employmentList, "Employment Type"),
         hired: createInfoRow(employmentList, "Date Hired"),
-        supervisor: createInfoRow(employmentList, "Supervisor")
+        service: createInfoRow(employmentList, "Years of Service")
     };
 
     employmentSection.append(employmentTitle, employmentList);
@@ -157,13 +160,40 @@ export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
     fileSection.className = "employee-section";
     fileSection.hidden = true;
 
-    const fileSummary = document.createElement("div");
-    fileSummary.className = "employee-file-summary";
+    const fileToolbar = document.createElement("div");
+    fileToolbar.className = "employee-file-toolbar";
+
+    const uploadLabel = document.createElement("label");
+    uploadLabel.className = "btn btn-primary btn-sm";
+    uploadLabel.textContent = "Upload";
+
+    const uploadInput = document.createElement("input");
+    uploadInput.type = "file";
+    uploadInput.accept = ".pdf,.doc,.docx,.jpg,.jpeg,.png";
+    uploadInput.hidden = true;
+    uploadLabel.setAttribute("for", "employee-doc-upload");
+    uploadInput.id = "employee-doc-upload";
+
+    uploadLabel.appendChild(uploadInput);
+    fileToolbar.appendChild(uploadLabel);
+
+    const fileCount = document.createElement("p");
+    fileCount.className = "employee-file-count";
 
     const fileItems = document.createElement("div");
     fileItems.className = "employee-file-list";
 
-    fileSection.append(fileSummary, fileItems);
+    fileSection.append(fileToolbar, fileCount, fileItems);
+
+    uploadInput.addEventListener("change", () => {
+        const file = uploadInput.files[0];
+        if (!file || !activeEmployee || !store) {
+            return;
+        }
+        store.addDocument(activeEmployee.id, file);
+        uploadInput.value = "";
+        refreshActiveEmployee();
+    });
 
     const setActiveTab = (tabButton, section) => {
         [personalTab, employmentTab, fileTab].forEach((button) => {
@@ -183,29 +213,62 @@ export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
     panel.append(hero, body);
     root.append(overlay, panel);
 
+    const refreshActiveEmployee = () => {
+        if (!activeEmployee || !store) {
+            return;
+        }
+        const latest = store.getEmployeeById(activeEmployee.id);
+        if (latest) {
+            open(latest, lastFocusedElement);
+        }
+    };
+
+    const renderAvatar = (employee) => {
+        avatar.replaceChildren();
+        avatar.className = "employee-hero-avatar";
+
+        if (employee.picture) {
+            const img = document.createElement("img");
+            img.src = employee.picture;
+            img.alt = getFullName(employee);
+            img.className = "employee-hero-photo";
+            avatar.appendChild(img);
+            return;
+        }
+
+        avatar.textContent = getInitialsFromEmployee(employee);
+    };
+
     const open = (employee, trigger) => {
         activeEmployee = employee;
         lastFocusedElement = trigger || document.activeElement;
-        avatar.textContent = getInitials(employee.name);
-        name.textContent = employee.name;
-        role.textContent = `${employee.role} · ${employee.department}`;
+        const displayName = formatDisplayName(employee);
+
+        renderAvatar(employee);
+        name.textContent = displayName;
+        role.textContent = `${employee.position} · ${employee.dept}`;
         status.textContent = employee.status;
         status.className = `status-badge ${STATUS_CLASS[employee.status] || "status-default"}`;
         idBadge.textContent = `ID: ${employee.id}`;
-        sinceBadge.textContent = `Since ${employee.since || employee.updated || "-"}`;
-        personalFields.name.textContent = employee.name;
+        sinceBadge.textContent = `Since ${employee.start_date || employee.updated || "-"}`;
+
+        personalFields.name.textContent = displayName;
         personalFields.email.textContent = employee.email;
-        personalFields.phone.textContent = employee.phone || "-";
+        personalFields.contact.textContent = employee.contact || "-";
         personalFields.address.textContent = employee.address || "-";
-        employmentFields.position.textContent = employee.role;
-        employmentFields.department.textContent = employee.department;
+
+        employmentFields.position.textContent = employee.position;
+        employmentFields.department.textContent = employee.dept;
         employmentFields.status.textContent = employee.status;
-        employmentFields.type.textContent = employee.employmentType || "-";
-        employmentFields.hired.textContent = employee.since || "-";
-        employmentFields.supervisor.textContent = employee.supervisor || "-";
-        renderFileSummary(fileSummary, employee);
-        renderDocuments(fileItems, employee.documents || []);
-        panel.setAttribute("aria-label", `${employee.name} details`);
+        employmentFields.hired.textContent = employee.start_date || "-";
+        employmentFields.service.textContent = getYearsOfService(employee.start_date);
+
+        renderDocuments(fileItems, employee, fileCount, (employeeId, docId) => {
+            store?.deleteDocument(employeeId, docId);
+            refreshActiveEmployee();
+        });
+
+        panel.setAttribute("aria-label", `${displayName} details`);
 
         setActiveTab(personalTab, personalSection);
 
@@ -240,31 +303,15 @@ export function createEmployeeDrawer({ onEdit, onDelete } = {}) {
         }
     });
 
-    return { root, open, close };
+    return { root, open, close, refreshActiveEmployee };
 }
 
-function renderFileSummary(container, employee) {
+function renderDocuments(container, employee, countEl, onChange) {
     container.replaceChildren();
+    const docs = employee.docs || [];
+    countEl.textContent = `${docs.length} document(s) on file`;
 
-    const status = document.createElement("span");
-    status.className = `status-badge ${FILE_STATUS_CLASS[employee.fileStatus] || "status-default"}`;
-    status.textContent = employee.fileStatus || "Unknown";
-
-    const meta = document.createElement("p");
-    meta.className = "employee-file-summary-meta";
-    meta.textContent = `${employee.fileCount ?? 0} file(s) on record`;
-
-    const notes = document.createElement("p");
-    notes.className = "employee-file-summary-notes";
-    notes.textContent = employee.fileNotes || "No notes.";
-
-    container.append(status, meta, notes);
-}
-
-function renderDocuments(container, documents = []) {
-    container.replaceChildren();
-
-    if (!documents.length) {
+    if (!docs.length) {
         const empty = document.createElement("div");
         empty.className = "employee-file-empty";
         empty.textContent = "No documents on file.";
@@ -272,15 +319,38 @@ function renderDocuments(container, documents = []) {
         return;
     }
 
-    documents.forEach((documentName) => {
+    docs.forEach((doc) => {
         const item = document.createElement("div");
         item.className = "employee-file-item";
 
+        const main = document.createElement("div");
+        main.className = "employee-file-main";
+
+        const type = document.createElement("span");
+        type.className = `employee-file-type ${DOC_TYPE_CLASS[doc.type] || DOC_TYPE_CLASS.other}`;
+        type.textContent = (doc.type || "file").toUpperCase();
+
         const name = document.createElement("span");
         name.className = "employee-file-name";
-        name.textContent = documentName;
+        name.textContent = doc.name;
 
-        item.appendChild(name);
+        const meta = document.createElement("span");
+        meta.className = "employee-file-meta";
+        meta.textContent = `${doc.size} · ${doc.date}`;
+
+        main.append(type, name, meta);
+
+        const removeButton = document.createElement("button");
+        removeButton.type = "button";
+        removeButton.className = "btn btn-ghost btn-sm";
+        removeButton.textContent = "Remove";
+        removeButton.addEventListener("click", () => {
+            if (typeof onChange === "function") {
+                onChange(employee.id, doc.id);
+            }
+        });
+
+        item.append(main, removeButton);
         container.appendChild(item);
     });
 }
