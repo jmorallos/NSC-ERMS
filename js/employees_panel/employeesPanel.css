@@ -1,0 +1,23 @@
+.card__table {
+    border: 1px solid black;
+}
+
+.emp-table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.emp-table thead tr {
+    background-color: navy;
+    color: white
+}
+
+.emp-table tbody tr {
+    border-bottom: 1px solid gray;
+    transition: background .1s;
+}
+
+.emp-table tbody tr:last-child {
+    border-bottom: none;
+}
